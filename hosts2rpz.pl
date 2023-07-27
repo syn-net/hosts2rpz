@@ -7,8 +7,6 @@ use strict;
 use warnings;
 use Getopt::Long;
 use List::Util qw[min max];
-use LWP::UserAgent;
-use HTTP::Request;
 
 # default file locations for input and output files
 my $in  = '';
@@ -16,10 +14,6 @@ my $out = '';
 
 my $verbose = 0;
 my $help;
-
-# User-Agent string for http(s) requests
-my $script_version = '0.3';
-my $agent = "hosts2rpz/${script_version} (https://github.com/syn-net/hosts2rpz))";
 
 # process any args the script was passed
 GetOptions(
@@ -47,9 +41,6 @@ my $serial = time;
 my $soa_hostname = 'rpz.lan.';
 # IMPORTANT(jeff): The administrative e-mail address must end with a dot (.)
 my $dns_admin_email = 'hostmaster.lan.';
-
-my $ua = LWP::UserAgent->new;
-$ua->agent($agent);
 
 my $exit_script_usage = "Usage: $0 --in [infile] --out [outfile]\n\n";
 
