@@ -40,14 +40,6 @@ my $maxlen = 1;    # length of longest parsed hostname
 my $rrformat;
 my ( $h, $a );
 my $serial = time;
-# FIXME(jeff): I have yet to figure out how to insert these two variables
-# within a "perlform" [1].
-# 1. https://perldoc.perl.org/perlform
-# IMPORTANT(jeff): The authoritative hostname must end with a dot (.)
-my $soa_hostname = 'rpz.lan.';
-# IMPORTANT(jeff): The administrative e-mail address must end with a dot (.)
-my $dns_admin_email = 'hostmaster.lan.';
-
 my $ua = LWP::UserAgent->new;
 $ua->agent($agent);
 
@@ -124,17 +116,33 @@ sub write_rr($$) {
     write $outfile;
 }
 
-# rpz db SOA template
+# TODO(JEFF): Ideally, we would fetch our SOA template data from two 
+# "source of truths";
+#
+# a) `/etc/powerdns/pdns.conf`;
+# b) via REST API call to the DNS web frontend that we used once upon 
+# a time ago.
+#
+# FIXME(JEFF): I have yet to figure out how to insert these two variables
+# within a "perlform" [1].
+#
+# 1. https://perldoc.perl.org/perlform
+#
+# IMPORTANT(JEFF): These template variables MUST end with a dot (.)
+my $soa_hostname = 'rpz.';
+my $dns_admin_email = 'i8degrees+pdns.gmail.com.';
+
+# The SOA zone template for output
 format HEADER =
 $TTL 60
-@            IN    SOA  rpz.lan. hostmaster.lan.  (
+@            IN    SOA  rpz. i8degrees+pdns.gmail.com. (
 '@'
             @>>>>>>>>>>>>>>>  ; serial:@<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
                           $serial,$serial
-                          3H  ; refresh
+                          60  ; refresh
                           1H  ; retry
-                          1W  ; expiry
-                          1H) ; minimum
-                  IN    NS    localhost.
-
+                          5D  ; expiry
+                          60) ; minimum
+                  IN    NS    ns3.home.
+                  IN    NS    ns4.home.
 .
