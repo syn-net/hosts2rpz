@@ -10,3 +10,13 @@ lint:
 	$(perl hosts2rpz.pl)
 count:
 	wc -l build/*.rpz
+# TODO(JEFF): Verify that `install`, `uninstall`, `remove` and `dist-clean`
+# targets do as we intend.
+#
+# FIXME(JEFF): Add commonly used options to `install`
+install:
+	install ./hosts2rpz.pl /usr/local/bin/hosts2rpz.pl
+uninstall:
+remove:
+dist-clean:
+	rm /usr/local/bin/hosts2rpz.pl
