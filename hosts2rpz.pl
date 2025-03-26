@@ -91,6 +91,14 @@ select($outfile);
 $~ = 'HEADER';
 write $outfile;
 
+# TODO(JEFF): We must have the SOA domain template added
+# to the end of each RR hostname, i.e.: 
+#
+# abc.com. # abc.com.blacklist.rpz.
+#
+# Perhaps we ought to add a switch for this option to be
+# applied?
+
 # write out each RR
 foreach $hostname ( sort keys %rec ) {
     &write_rr( $hostname, $rec{$hostname} );
